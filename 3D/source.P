@@ -1,6 +1,6 @@
-n1=128 d1=.001
+n1=1500 d1=.004
 tdelay=.02
-fund=40.
+fund=10.
 
 
 wavelet=ricker2

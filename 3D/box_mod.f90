@@ -111,10 +111,13 @@ contains
     i5 = (source%y - times%o5) / times%d5 + 1.5
     allocate(minT(times%n1,times%n2, times%n3))
 
+   write(0,*) 'source%x, source%y', source%x, source%y
    write(0,*) 'times%o4, times%o5', times%o4, times%o5
    write(0,*) 'times%d4, times%d5', times%d4, times%d5
    write(0,*) "CHECK SOURCE",source%x,source%y
    write(0,*) "SOURCE LOCATION IS ",i4,i5
+   write(0,*) 'floc(1,1,1):', dat%floc(:,1,1)
+   write(0,*) 'floc dim', size(dat%floc, 1), size(dat%floc, 2), size(dat%floc,3)
 
     minT=times%vals(:,:,:,i4,i5)
 
@@ -366,7 +369,7 @@ contains
 
     if(v) write(0,*) "speedup factor",(fullsize*(timeMax-timeMin)/dtBig)/(smallsize*mod%ntblock),mod%dt
 
-    call exit()
+    !call exit()
   end subroutine
 
   ! conghui: don't break axis at the first stage, set nblock to zero

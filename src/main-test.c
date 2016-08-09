@@ -211,6 +211,7 @@ int main(int argc, char** argv)
   float qfact;
   float downfact;
   float w0; // for velocity
+  bool withq;
 
   if (!sf_getint("timeblocks", &timeblocks)) timeblocks = 40;
   if (!sf_getfloat("maxf", &maxf)) maxf = 80;
@@ -219,6 +220,7 @@ int main(int argc, char** argv)
   if (!sf_getfloat("downfact", &downfact)) downfact = 0.04;
   if (!sf_getfloat("qfact", &qfact)) qfact = 50; // copy from vel_mod.f90
   if (!sf_getfloat("w0", &w0)) w0 = 60;
+  if (!sf_getbool("withq", &withq)) withq = false;
 
   nb = nbd;
 
@@ -271,6 +273,7 @@ int main(int argc, char** argv)
   memset(u0[0][0],0,sizeof(float)*nzpad*nxpad*nypad);
   memset(u1[0][0],0,sizeof(float)*nzpad*nxpad*nypad);
 
+  sf_warning("%s", withq ? "with q" : "no q");
   for (int iblock = 0; iblock < domain->timeblocks; iblock++) {
     sf_warning("FORWARD BLOCK: %d", iblock);
     modeling_t *cur = &domain->hyper[iblock];
@@ -320,7 +323,7 @@ int main(int argc, char** argv)
     old = cur;
 
     sf_warning("ntblock: %d\n", cur->ntblock);
-
+    sf_warning("dt:%f, cur->dt:%f\n", dt, cur->dt);
     assert(fabs(dt - cur->dt) < 0.00001);
 
     for (it=0; it<cur->ntblock; it++) {
@@ -329,7 +332,11 @@ int main(int argc, char** argv)
       tic=omp_get_wtime();
 #endif
 
+      if (withq) {
       step_forward_q(u0,u1,vel,vgamma,rho,fdcoef_d2,fdcoef_d1,nop,nzpad,nxpad,nypad);
+      } else {
+      step_forward(u0,u1,vel,rho,fdcoef_d2,fdcoef_d1,nop,nzpad,nxpad,nypad);
+      }
 
       if (adj) { /* backward inject source wavelet */
         if (expl) {

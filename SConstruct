@@ -16,7 +16,7 @@ additional_libpath  = [os.environ['RSFROOT'] + '/lib']
 additional_libs     = ['rsf', 'su']
 
 if compiler_set == 'gnu':#{{{
-  c_compiler      = ['gcc',  '-fopenmp', '-std=c99']
+  c_compiler      = ['gcc',  '-fopenmp', '-std=c99', ]
   cxx_compiler    = ['g++', '-fopenmp']
   linker          = cxx_compiler
   warn_flags      = ['-Wall', '-Wextra', '-Wno-write-strings']
